@@ -3,9 +3,9 @@ __author__ = 'ElenaSidorova'
 import re
 
 SYMBOLS = {
-    'symbols': [u'[', u']', u'-', u"'"],
-    'numbers': [u'0', u'1', u'2', u'3', u'4', u'5', u'6', u'7', u'8', u'9'],
-    'brackets': [u'[', u']']
+    'symbols': ['[', ']', '-', "'"],
+    'numbers': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    'brackets': ['[', ']']
 }
 
 class WordTokenizer(object):
@@ -28,10 +28,10 @@ class WordTokenizer(object):
                 if tokens[-1][-1].isalpha():
                     tokens[-1] += litera
                 elif tokens[-1][-1] in SYMBOLS['symbols']:
-                    if litera == u'[' and tokens[-1][-1] in SYMBOLS['brackets']:
+                    if litera == '[' and tokens[-1][-1] in SYMBOLS['brackets']:
                         tokens.append(litera)
                         continue
-                    if litera == u']' and tokens[-1][-1] in SYMBOLS['brackets']:
+                    if litera == ']' and tokens[-1][-1] in SYMBOLS['brackets']:
                         tokens.append(litera)
                         continue
                     tokens[-1] += litera
@@ -47,7 +47,7 @@ class WordTokenizer(object):
             tokens.append(litera)
         refactored = []
         for token in tokens:
-            if u']' not in token and u'[' not in token:
+            if ']' not in token and '[' not in token:
                 refactored.append(token)
             else:
                 new = cls.check_token(token)
@@ -65,7 +65,7 @@ class WordTokenizer(object):
         for i, token in enumerate(tokens):
             if pos >= len(tokens):
                 break
-            if tokens[pos] == u'[':
+            if tokens[pos] == '[':
                 test_tokens = tokens[pos+1:]
                 if len(test_tokens) == 0:
                     edited.append(tokens[pos])
@@ -86,7 +86,7 @@ class WordTokenizer(object):
                                 if arr:
                                     joined = 1
                             break
-                        if re.search(u'^\s$', st):
+                        if re.search('^\s$', st):
                             if closed and arr:
                                 joined = 1
                             break
@@ -99,14 +99,14 @@ class WordTokenizer(object):
                                 if closed and arr:
                                     joined = 1
                                 break
-                    elif st == u']':
+                    elif st == ']':
                         if closed:
                             if arr:
                                 joined = 1
                             break
                         closed = 1
                         arr.append(st)
-                    elif st == u'[':
+                    elif st == '[':
                         if closed and arr:
                             joined = 1
                         break
@@ -115,7 +115,7 @@ class WordTokenizer(object):
                     n += 1
 
                 if joined and arr:
-                    token = token + u''.join(arr)
+                    token = token + ''.join(arr)
 
                 if not pos:
                     edited.append(token)
@@ -141,9 +141,9 @@ class WordTokenizer(object):
 
     @classmethod
     def check_token(cls, token):
-        if u'[' in token and u']' not in token:
+        if '[' in token and ']' not in token:
             token = cls.split_token(token)
-        elif u']' in token and u'[' not in token:
+        elif ']' in token and '[' not in token:
             token = cls.split_token(token)
         elif cls.check_order_and_amount(token) is None:
             token = cls.split_token(token)
@@ -154,9 +154,9 @@ class WordTokenizer(object):
         left = []
         right = []
         for i, litera in enumerate(token):
-            if litera == u'[':
+            if litera == '[':
                 left.append(i)
-            if litera == u']':
+            if litera == ']':
                 right.append(i)
         if len(left) != len(right):
             return None
@@ -185,13 +185,13 @@ class WordTokenizer(object):
                 arr.append(litera)
         return arr
 
-a = WordTokenizer()
-# b = a.tokenize(u'''...те\nст... токенизатора.''')
-# b = a.tokenize(u'обычно[мъ] своемъ мѣстѣ, подлѣ барометра, разставивъ ноги на приличное раз[стояніе], заложивъ руки назадъ и приводя за спиною пальцы въ движеніе тѣмъ быстрѣе, чѣмъ болѣе горячился [13] папа, спереди не выказывалъ ни малѣйшаго знака безпокойства, но, напротивъ, выраженіемъ лица выказывалъ совершенное сознаніе своей правоты и вмѣстѣ съ тѣмъ подвластности.')
-#b = a.tokenize(u'«скоб[к»и]»')
-b = u"который [на] обычно[мъ] [своемъ] мѣстѣ, под[лѣ] баро[метра], разст[авивъ], любо[въ] 123 д'артань-ян"
-# b = u'qwe[re]fs jk[]jk'
-# b = u'«скоб[к»и]po» [скобки]'
-b = a.tokenize(b)
+#a = WordTokenizer()
+# b = a.tokenize('''...те\nст... токенизатора.''')
+# b = a.tokenize('обычно[мъ] своемъ мѣстѣ, подлѣ барометра, разставивъ ноги на приличное раз[стояніе], заложивъ руки назадъ и приводя за спиною пальцы въ движеніе тѣмъ быстрѣе, чѣмъ болѣе горячился [13] папа, спереди не выказывалъ ни малѣйшаго знака безпокойства, но, напротивъ, выраженіемъ лица выказывалъ совершенное сознаніе своей правоты и вмѣстѣ съ тѣмъ подвластности.')
+#b = a.tokenize('«скоб[к»и]»')
+#b = u"который [на] обычно[мъ] [своемъ] мѣстѣ, под[лѣ] баро[метра], разст[авивъ], любо[въ] 123 д'артань-ян"
+# b = 'qwe[re]fs jk[]jk'
+# b = '«скоб[к»и]po» [скобки]'
+#b = a.tokenize(b)
 #print ('\n'.join(b))
-# print u'\n'.join(a.get_tokens(b))
+# print '\n'.join(a.get_tokens(b))
